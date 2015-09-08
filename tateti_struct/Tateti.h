@@ -8,19 +8,20 @@ enum MODE { PVP, PVC };
 
 class Tateti {
 
-	//Constructors
-	Tateti();
-	Tateti(MODE m);
-	~Tateti();
+public:
+		//Constructors
+		Tateti();
+		Tateti(MODE m);
+		~Tateti();
 
-	//Methods
-	bool actual_player();
-	bool game_over();
-	bool not_a_valid_move(int x, int y);
+		//Methods
+		bool actual_player();
+		bool game_over();
+		bool not_a_valid_move(int x, int y);
 
-	void init_game();
-	void print_game();
-	void set_slot(int x, int y, bool activePlayer);
+		void init_game();
+		void print_game();
+		void set_slot(int x, int y, bool activePlayer);
 
 
 	private: 

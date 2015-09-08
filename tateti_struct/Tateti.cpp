@@ -1,16 +1,27 @@
-#include "tateti_struct.h"
+#include "Tateti.h"
 #include <iostream>
-using namespace std	;
+#include <random>
+using namespace std;
 
-tateti_struct::tateti_struct(MODE m) {
-	this.table = new char[3][3]
-	this.mode = m;
-	this.activeplayer = get_player1();
+Tateti::Tateti(){
+	table = vector<vector<char> >(3, vector<char>(0));
+	mode = PVC;
+	activePlayer = get_player1();
 }
 
-tateti_struct::init_game(){
-	while(!game_over())
-	{
+Tateti::Tateti(MODE m) {
+	table = vector<vector<char> >(3, vector<char>(3,0));
+	mode = m;
+	activePlayer = get_player1();
+}
+
+Tateti::~Tateti(){}
+
+void Tateti::init_game(){
+
+	int n = 0;
+	while(n!=6){
+		n++;
 		int x;
 		int y;
 
@@ -21,51 +32,48 @@ tateti_struct::init_game(){
 			cout<<"stop being a cunt!:"<< endl;
 			cin >> x >> y;
 			cout << endl;
-		} 
-		set_slot(x,y, actual_player);
-		print_ttt();
-		this.activeplayer = !this.activeplayer;
+		}
+
+		set_slot(x,y, activePlayer);
+		print_game();
+		activePlayer = !activePlayer;
 
 	}
 
 }
 
-
-
-
-bool tateti_struct::get_player1(){
+bool Tateti::get_player1(){
 	default_random_engine generator;
 	uniform_int_distribution<int> distribution(0,1);
-	return (bool)distribution(generator);
+	return (bool) distribution(generator);
 }
 
-bool tateti_struct::actual_player(){}//TODO
+bool Tateti::actual_player(){
+	// TODO
+	return true;
+}
 
-void tateti_struct::set_slot(int x, int y, bool actPlyr )
-{
-	actPlyr?(this.table[x][y]='X'):(this.table[x][y]='O')
+void Tateti::set_slot(int x, int y, bool actPlyr ){
+	actPlyr?(table[x][y]='X'):(table[x][y]='O');
 	//this.table[x][y] = (actPlyr? 'X' : 'O')	
 }
 
-bool tateti_struct::game_over()
-{
+bool Tateti::game_over(){
+	//TODO
 	//return no_valid_moves(0,0) || someone_won();
-}//TODO
+	return true;
+}
 
-void tateti_struct::print_ttt()
-{
-	for(i=0; i<3, i++)
-	{
-		for(j=0; j<3, j++)
-		{
-			cout << not_a_valid_move(i,j)?('-'):this.table[x][y] << "\t"
+void Tateti::print_game(){
+	for(int col=0; col<3; col++){
+		for(int row=0; row<3; row++){
+			cout << (!not_a_valid_move(col,row)? '-': table[col][row]) << "\t";
 		}
 		cout << endl;
 	}
 }
 
 
-bool tateti_struct::not_a_valid_move(int x,int y);
-{
-	return this.table[x][y]!=NULL;
+bool Tateti::not_a_valid_move(int x,int y){
+	return x>2 || y>2 || x<0 || y<0 || table[x][y] != 0;
 }
