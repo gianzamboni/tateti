@@ -11,8 +11,9 @@ main: $(OBJS)
 main.o: main.cpp
 	$(CC) $(CFLAGS) main.cpp $(LIBRARIES)
 
-Tateti.o: tateti_struct/Tateti.cpp tateti_struct/Tateti.h
-	$(CC) $(CFLAGS) tateti_struct/Tateti.cpp $(LIBRARIES)	
+Tateti.o: tateti/Tateti.cpp tateti/Tateti.h
+	$(CC) $(CFLAGS) Tateti/Tateti.cpp $(LIBRARIES)	
+
 clean:
 	rm *.o
 	rm main

@@ -1,11 +1,10 @@
-#include <iostream>
-#include "tateti_struct/Tateti.h"
-using namespace std	;
+#include <stdio.h>
+using namespace std;
 
 
-int main()
+int main(int argc, char** argv)
 {
-     cout << "New GAME" << endl;
+     printf("New Game\n");
      Tateti newGame(PVP);
      newGame.init_game();
 

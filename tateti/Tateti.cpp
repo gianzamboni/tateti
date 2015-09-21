@@ -20,7 +20,7 @@ Tateti::~Tateti(){}
 void Tateti::init_game(){
 
 	int n = 0;
-	while(n!=6){
+	while(n!=1){
 		n++;
 		int x;
 		int y;
