@@ -1,7 +1,7 @@
-OBJS = main.o Tateti.o 
+OBJS = main.o Tateti.o cositasDelSDL.o
 CC = g++ -std=c++0x
 DEBUG = -g
-CFLAGS = -Wall -c $(DEBUG) -std=c++0x
+CFLAGS	 = -Wall -c $(DEBUG) -std=c++0x
 LFLAGS = -Wall -Werror -Wextra $(DEBUG) -std=c++0x
 LIBRARIES = -lSDL2 
 
@@ -13,6 +13,10 @@ main.o: main.cpp
 
 Tateti.o: Tateti/Tateti.cpp Tateti/Tateti.h
 	$(CC) $(CFLAGS) Tateti/Tateti.cpp $(LIBRARIES)	
+
+cositasDelSDL.o: cositasDelSDL.cpp cositasDelSDL.h
+	$(CC) $(CFLAGS) cositasDelSDL.cpp $(LIBRARIES)	
+
 
 clean:
 	rm *.o
