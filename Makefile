@@ -2,8 +2,8 @@ OBJS = main.o Tateti.o
 CC = g++ -std=c++0x
 DEBUG = -g
 CFLAGS = -Wall -c $(DEBUG) -std=c++0x
-LFLAGS = -Wall $(DEBUG) -std=c++0x
-LIBRARIES = 
+LFLAGS = -Wall -Werror -Wextra $(DEBUG) -std=c++0x
+LIBRARIES = -lSDL2 
 
 main: $(OBJS)
 	$(CC) $(LFLAGS) $(OBJS) -o main $(LIBRARIES)
@@ -11,7 +11,7 @@ main: $(OBJS)
 main.o: main.cpp
 	$(CC) $(CFLAGS) main.cpp $(LIBRARIES)
 
-Tateti.o: tateti/Tateti.cpp tateti/Tateti.h
+Tateti.o: Tateti/Tateti.cpp Tateti/Tateti.h
 	$(CC) $(CFLAGS) Tateti/Tateti.cpp $(LIBRARIES)	
 
 clean:
