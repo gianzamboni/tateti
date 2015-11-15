@@ -4,7 +4,7 @@
 using namespace std;
 
 Tateti::Tateti(){
-	table = vector<vector<char> >(3, vector<char>(0));
+	table = vector<vector<char> >(3, vector<char>(3));
 	mode = PVC;
 	activePlayer = get_player1();
 }
@@ -20,7 +20,7 @@ Tateti::~Tateti(){}
 void Tateti::init_game(){
 
 	int n = 0;
-	while(n!=1){
+	while(n!=6){
 		n++;
 		int x;
 		int y;
