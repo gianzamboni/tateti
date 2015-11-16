@@ -6,74 +6,76 @@ using namespace std;
 Tateti::Tateti(){
 	table = vector<vector<char> >(3, vector<char>(3));
 	mode = PVC;
-	activePlayer = get_player1();
+	actualPlayer = getPlayer1();
 }
 
 Tateti::Tateti(MODE m) {
 	table = vector<vector<char> >(3, vector<char>(3,0));
 	mode = m;
-	activePlayer = get_player1();
+	actualPlayer = getPlayer1();
 }
 
 Tateti::~Tateti(){}
 
-void Tateti::init_game(){
+// void Tateti::initGame(){
 
-	int n = 0;
-	while(n!=6){
-		n++;
-		int x;
-		int y;
+// 	int n = 0;
+// 	while(n!=6){
+// 		n++;
+// 		int x;
+// 		int y;
 
-		cout<< "gimme me ya move "<< actual_player() << "!: ";
-		cin >> x >> y;
-		cout << endl;
-		while(not_a_valid_move(x,y)){
-			cout<<"stop being a cunt!:"<< endl;
-			cin >> x >> y;
-			cout << endl;
-		}
+// 		cout<< "gimme me ya move "<< getActualPlayer() << "!: ";
+// 		cin >> x >> y;
+// 		cout << endl;
+// 		while(notAValidMove(x,y)){
+// 			cout<<"stop being a cunt!:"<< endl;
+// 			cin >> x >> y;
+// 			cout << endl;
+// 		}
 
-		set_slot(x,y, activePlayer);
-		print_game();
-		activePlayer = !activePlayer;
+// 		setSlot(x,y);
+// 		printGame();
+// 		actualPlayer = !actualPlayer;
 
-	}
+// 	}
 
-}
+// }
 
-bool Tateti::get_player1(){
+bool Tateti::getPlayer1(){
 	default_random_engine generator;
 	uniform_int_distribution<int> distribution(0,1);
 	return (bool) distribution(generator);
 }
 
-bool Tateti::actual_player(){
-	// TODO
-	return true;
+bool Tateti::getActualPlayer(){
+	return actualPlayer;
 }
 
-void Tateti::set_slot(int x, int y, bool actPlyr ){
-	actPlyr?(table[x][y]='X'):(table[x][y]='O');
-	//this.table[x][y] = (actPlyr? 'X' : 'O')	
+void Tateti::setSlot(int x, int y){
+	table[x][y] = actualPlayer? 'X' : 'O';
+	actualPlayer = !actualPlayer;	
 }
 
-bool Tateti::game_over(){
+char Tateti::getSlotValue(int x, int y){
+	return table[x][y];
+}
+
+//bool Tateti::gameOver(){
 	//TODO
 	//return no_valid_moves(0,0) || someone_won();
-	return true;
+	//return true;
+//}
+
+void Tateti::printGame(){
+ 	for(int y=0; y<3; y++){
+ 		for(int x=0; x<3; x++){
+ 			cout << (!notAValidMove(x,y)? '-': table[x][y]) << "\t";
+ 		}	
+ 		cout << endl;
+ 	}
 }
 
-void Tateti::print_game(){
-	for(int col=0; col<3; col++){
-		for(int row=0; row<3; row++){
-			cout << (!not_a_valid_move(col,row)? '-': table[col][row]) << "\t";
-		}
-		cout << endl;
-	}
-}
-
-
-bool Tateti::not_a_valid_move(int x,int y){
+bool Tateti::notAValidMove(int x,int y){
 	return x>2 || y>2 || x<0 || y<0 || table[x][y] != 0;
 }
