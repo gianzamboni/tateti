@@ -1,0 +1,49 @@
+13 - GENERAL PROTECTION (#GP):
+	
+	*Exceeding the segment limit
+	*Violating any of the privilege rules
+	
+	*Accessing a gate that contains a null segment selector.
+	*Accessing memory using the DS, ES, FS, or GS register when it contains a null segment selector.
+	*Attempting to execute a privileged instruction when the CPL is not equal to 0
+	*Attempting to write a 1 into a reserved bit of CR4.
+	*Reading from an execute-only code segment.
+	*Transferring execution to a segment that is not executable.
+	*Writing to a code segment or a read-only data segment.
+
+-------------------------------------------------------------------------------------------------------------------
+
+	• The P (present) flag in a page-directory or page-table entry needed for the address translation is clear,
+	indicating that a page table or the page containing the operand is not present in physical memory.
+	• The procedure does not have sufficient privilege to access the indicated page (that is, a procedure running in
+	user mode attempts to access a supervisor-mode page).
+	• Code running in user mode attempts to write to a read-only page. In the Intel486 and later processors, if the
+	WP flag is set in CR0, the page fault will also be triggered by code running in supervisor mode that tries to write
+	to a read-only page.
+	• An instruction fetch to a linear address that translates to a physical address in a memory page with the
+	execute-disable bit set (for information about the execute-disable bit, see Chapter 4, “Paging”).
+	• One or more reserved bits in page directory entry are set to 1. See description below of RSVD error code flag.
+		
+
+
+
+	*Loading the SS, DS, ES, FS, or GS register with a segment selector for a system segment.
+	*Loading the CR0 register with a set PG flag (paging enabled) and a clear PE flag (protection disabled).
+	*Loading the SS register with a segment selector for a read-only segment (unless the selector comes from a TSS during a task switch, in which case an invalid-TSS exception occurs).
+	*Loading the DS, ES, FS, or GS register with a segment selector for an execute-only code segment.
+	*Loading the CS register with a segment selector for a data segment or a null segment selector.
+	*Executing the INT n instruction when the CPL is greater than the DPL of the referenced interrupt, trap, or task gate.
+	*Loading the SS register with the segment selector of an executable segment or a null segment selector.
+	
+	*The segment selector in a call, interrupt, or trap gate does not point to a code segment.
+	*The segment selector operand in the LTR instruction is local or points to a TSS that is not available.
+
+	*Switching to a busy task during a call or jump to a TSS.
+	*Using a segment selector on a non-IRET task switch that points to a TSS descriptor in the current LDT. TSS descriptors can only reside in the GDT. This condition causes a #TS exception during an IRET task switch. 
+	*Exceeding the instruction length limit of 15 bytes (this only can occur when redundant prefixes are placedbefore an instruction).
+	*Loading the CR0 register with a set NW flag and a clear CD flag.
+	*Referencing an entry in the IDT (following an interrupt or exception) that is not an interrupt, trap, or task gate.
+	*Attempting to access an interrupt or exception handler through an interrupt or trap gate from virtual-8086 mode when the handler’s code segment DPL is greater than 0.
+	*The segment selector operand in the LLDT instruction is a local type (TI flag is set) or does not point to a segment descriptor of the LDT type.
+	*The target code-segment selector for a call, jump, or return is null.
+	* If the PAE and/or PSE flag in control register CR4 is set and the processor detects any reserved bits in a page-directory-pointer-table entry set to 1. These bits are checked during a write to control registers CR0, CR3, or CR4 that causes a reloading of the page-directory-pointer-table entry.
