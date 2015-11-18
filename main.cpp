@@ -7,13 +7,11 @@
 using namespace std;
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
 
 
 //Global variables
 SDL_Window* WINDOW;
-SDL_Surface* SCREEN_SURFACE, *CELDA, *SELEC_V, *SELEC_H, *PLY_O, *PLY_X;
+SDL_Surface* SCREEN_SURFACE, *CELDA, *SELEC_V, *SELEC_H, *PLY_O, *PLY_X, *GAMOVR;
 
 void loadSurfaces(){
 	SCREEN_SURFACE = SDL_GetWindowSurface( WINDOW );	
@@ -22,6 +20,7 @@ void loadSurfaces(){
 	SELEC_H = SDL_LoadBMP("imgs/selh.bmp");
 	PLY_O = SDL_LoadBMP("imgs/plyO.bmp");
 	PLY_X = SDL_LoadBMP("imgs/plyX.bmp");
+	GAMOVR = SDL_LoadBMP("imgs/gamover0.bmp");
 }
 
 void freeSurfaces(){
@@ -31,6 +30,7 @@ void freeSurfaces(){
 	SDL_FreeSurface(SELEC_H);
 	SDL_FreeSurface(PLY_O);
 	SDL_FreeSurface(PLY_X);
+	SDL_FreeSurface(GAMOVR);
 }
 
 void renderBoard(){
@@ -150,6 +150,13 @@ void drawSelector(SDL_Rect* position){
 
     delete selectorPositionAux;
 }
+void drawEndGame(){
+	cout << "Loading END GAME..." << endl;
+	SDL_Rect* position = new SDL_Rect;
+	position->y = 120;
+   	position->x = 0;
+   	SDL_BlitSurface(GAMOVR, NULL, SCREEN_SURFACE, position);
+}
 
 // TODO Refactor this
 void  mainLoop(){
@@ -168,33 +175,43 @@ void  mainLoop(){
         //Handle events on queue
 		while( SDL_PollEvent( &event ) != 0 ){
 
-	    	reloadCell(tateti, selectorPosition);
-
-			if( event.type == SDL_KEYDOWN ){
-	        	switch( event.key.keysym.sym ) {//Esta cosa horrible es "que tecla se apreto"
-
-		  			case SDLK_UP:
-		  			case SDLK_DOWN:
-		  			case SDLK_RIGHT:
-		  			case SDLK_LEFT:
-				    	updateSelectorPosition(event.key.keysym.sym, selectorPosition);
-				        break;
-			
-					case SDLK_RETURN:
-						updateBoard(tateti, selectorPosition);
-				        break;
-				}
-	        } else if(event.type == SDL_QUIT){
+			if(event.type == SDL_QUIT){
 	        	quit = true;
-	        }
+	        } 
+	    	else if (tateti->gameOver()){
+	    		reloadCell(tateti, selectorPosition);
+	    		drawEndGame();
+	    	}
+			else {
 
-	        drawSelector(selectorPosition);
+	    		reloadCell(tateti, selectorPosition);
+				if(event.type == SDL_KEYDOWN){
+		        	switch( event.key.keysym.sym ) {//Esta cosa horrible es "que tecla se apreto"
+
+			  			case SDLK_UP:
+			  			case SDLK_DOWN:
+			  			case SDLK_RIGHT:
+			  			case SDLK_LEFT:
+					    	updateSelectorPosition(event.key.keysym.sym, selectorPosition);
+					        break;
+				
+						case SDLK_RETURN:
+							updateBoard(tateti, selectorPosition);
+					        break;
+					}
+		        }
+	        	drawSelector(selectorPosition);
+
+		    }
+
    			SDL_UpdateWindowSurface(WINDOW);
 
     	}
+
 	}
 
     delete selectorPosition;
+    delete tateti;
 }
 
 
@@ -206,16 +223,16 @@ int main(int argc, char** argv)
 		printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
 
 	} else {
-			
+		cout << "SDL initialized..." << endl;
 		WINDOW = SDL_CreateWindow( "TATETI", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 310, 310, SDL_WINDOW_SHOWN);
+		cout << "Loading surfaces..." << endl;
    		loadSurfaces();
-		
+		cout << "Drawing board..." << endl;
 		renderBoard();
-	    
+	    cout << "Initalizing game..." << endl;
 	    mainLoop();
-       
+       	cout << "Stoping game..." << endl;
         freeSurfaces();
-		
 		SDL_DestroyWindow( WINDOW );
 	}
 	

@@ -5,8 +5,8 @@ CFLAGS	 = -Wall -c $(DEBUG) -std=c++0x
 LFLAGS = -Wall -Werror -Wextra $(DEBUG) -std=c++0x
 LIBRARIES = -lSDL2 
 
-main: $(OBJS)
-	$(CC) $(LFLAGS) $(OBJS) -o main $(LIBRARIES)
+tateti: $(OBJS)
+	$(CC) $(LFLAGS) $(OBJS) -o tateti $(LIBRARIES)
 
 main.o: main.cpp
 	$(CC) $(CFLAGS) main.cpp $(LIBRARIES)
@@ -20,4 +20,4 @@ cositasDelSDL.o: cositasDelSDL.cpp cositasDelSDL.h
 
 clean:
 	rm *.o
-	rm main
+	rm tateti

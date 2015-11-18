@@ -15,13 +15,13 @@ public:
 		~Tateti();
 
 		//Methods
-		//bool gameOver();
+		bool gameOver();
 		bool notAValidMove(int x, int y);
 		bool getActualPlayer();
 
 		char getSlotValue(int x, int y);
 		
-		//void initGame();
+		void initGame();
 		void printGame();
 		void setSlot(int x, int y);
 
@@ -29,6 +29,9 @@ public:
 	private: 
 		vector<vector<char> > table;
 		bool actualPlayer;
+		bool hayDiagonal();
+		bool hayColumna();
+		bool hayFila();
 		MODE mode;
 
 		bool getPlayer1();

@@ -17,30 +17,28 @@ Tateti::Tateti(MODE m) {
 
 Tateti::~Tateti(){}
 
-// void Tateti::initGame(){
+ void Tateti::initGame(){
 
-// 	int n = 0;
-// 	while(n!=6){
-// 		n++;
-// 		int x;
-// 		int y;
+ 	int n = 0;
+ 	while(n!=6){
+ 		n++;
+ 		int x;
+ 		int y;
 
-// 		cout<< "gimme me ya move "<< getActualPlayer() << "!: ";
-// 		cin >> x >> y;
-// 		cout << endl;
-// 		while(notAValidMove(x,y)){
-// 			cout<<"stop being a cunt!:"<< endl;
-// 			cin >> x >> y;
-// 			cout << endl;
-// 		}
+ 		cout<< "gimme me ya move "<< getActualPlayer() << "!: ";
+ 		cin >> x >> y;
+ 		cout << endl;
+ 		while(notAValidMove(x,y)){
+ 			cout<<"stop being a cunt!:"<< endl;
+ 			cin >> x >> y;
+ 			cout << endl;
+ 		}
 
-// 		setSlot(x,y);
-// 		printGame();
-// 		actualPlayer = !actualPlayer;
+ 		setSlot(x,y);
+ 		printGame();
 
-// 	}
-
-// }
+ 	}
+}
 
 bool Tateti::getPlayer1(){
 	default_random_engine generator;
@@ -61,11 +59,34 @@ char Tateti::getSlotValue(int x, int y){
 	return table[x][y];
 }
 
-//bool Tateti::gameOver(){
-	//TODO
-	//return no_valid_moves(0,0) || someone_won();
-	//return true;
-//}
+bool Tateti::gameOver(){
+	return hayDiagonal() || hayColumna() || hayColumna();	
+}
+
+bool Tateti::hayDiagonal(){
+	return ((table[0][0] != 0)&&(table[0][0] == table[1][1]) && (table[0][0] == table[2][2]));
+}
+
+bool Tateti::hayFila(){
+	
+	for(int i=0; i<3; i++){
+		cout<< ((table[i][0] != 0)&&(table[i][0] == table[i][1]) && (table[i][0] == table[i][2])) << endl;
+		if ((table[i][0] != 0)&&(table[i][0] == table[i][1]) && (table[i][0] == table[i][2])){
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Tateti::hayColumna(){
+
+	for(int i=0; i<3; i++){
+		if ((table[0][i] != 0)&&(table[0][i] == table[1][i]) && (table[0][i] == table[2][i])){
+			return true;
+		}
+	}
+	return false;
+}
 
 void Tateti::printGame(){
  	for(int y=0; y<3; y++){
