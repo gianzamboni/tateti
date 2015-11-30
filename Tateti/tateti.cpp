@@ -1,6 +1,4 @@
-#include "Tateti.h"
-#include <iostream>
-#include <random>
+#include "tateti.h"
 using namespace std;
 
 Tateti::Tateti(){
@@ -60,32 +58,43 @@ char Tateti::getSlotValue(int x, int y){
 }
 
 bool Tateti::gameOver(){
-	return hayDiagonal() || hayColumna() || hayColumna();	
+	
+	bool b = hayDiagonal();
+	for(int i = 0; i < 3; i++){
+		b = b || hayFila(i) || hayColumna(i);
+	}
+	return b;	
 }
 
 bool Tateti::hayDiagonal(){
-	return ((table[0][0] != 0)&&(table[0][0] == table[1][1]) && (table[0][0] == table[2][2]));
+	
+	bool diagonal1 = (table[0][0] != 0)&&(table[0][0] == table[1][1]) && (table[0][0] == table[2][2]);
+	bool diagonal2 = (table[0][2] != 0)&&(table[0][2] == table[1][1]) && (table[0][2] == table[2][0]);
+	return diagonal1 || diagonal2;
 }
 
-bool Tateti::hayFila(){
+bool Tateti::hayFila(int y){
+	bool b = table[0][y] != 0;
+
+	if(!b) return false;
 	
 	for(int i=0; i<3; i++){
-		cout<< ((table[i][0] != 0)&&(table[i][0] == table[i][1]) && (table[i][0] == table[i][2])) << endl;
-		if ((table[i][0] != 0)&&(table[i][0] == table[i][1]) && (table[i][0] == table[i][2])){
-			return true;
-		}
+		b = b && (table[i][y] == table[0][y]);
 	}
-	return false;
+
+	return b;
 }
 
-bool Tateti::hayColumna(){
+bool Tateti::hayColumna(int x){
+	bool b = table[x][0] != 0;
 
+	if(!b) return false;
+	
 	for(int i=0; i<3; i++){
-		if ((table[0][i] != 0)&&(table[0][i] == table[1][i]) && (table[0][i] == table[2][i])){
-			return true;
-		}
+		b = b && (table[x][i] == table[x][0]);
 	}
-	return false;
+
+	return b;
 }
 
 void Tateti::printGame(){
