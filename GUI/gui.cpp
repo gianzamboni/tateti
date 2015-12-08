@@ -1,8 +1,12 @@
 #include "gui.h"
+#include <chrono>
+#include <ctime>
+#include <iostream>
+using namespace std;
 
 
 SDL_Window* WINDOW;
-SDL_Surface* SCREEN_SURFACE, *CELDA, *SELEC_V, *SELEC_H, *PLY_O, *PLY_X, *GAMOVR;
+SDL_Surface* SCREEN_SURFACE, *CELDA, *SELEC_V, *SELEC_H, *PLY_O, *PLY_X, *GAMOVR0, *GAMOVR1;
 
 void initTatetiWindow(){
 	WINDOW = SDL_CreateWindow( "TATETI", SDL_WINDOWPOS_UNDEFINED, 
@@ -16,7 +20,8 @@ void loadSurfaces(){
 	SELEC_H = SDL_LoadBMP("GUI/imgs/selh.bmp");
 	PLY_O = SDL_LoadBMP("GUI/imgs/plyO.bmp");
 	PLY_X = SDL_LoadBMP("GUI/imgs/plyX.bmp");
-	GAMOVR = SDL_LoadBMP("GUI/imgs/gamover0.bmp");
+	GAMOVR0 = SDL_LoadBMP("GUI/imgs/gameover0.bmp");
+	GAMOVR1 = SDL_LoadBMP("GUI/imgs/gameover1.bmp");
 }
 
 void freeSurfaces(){
@@ -26,7 +31,8 @@ void freeSurfaces(){
 	SDL_FreeSurface(SELEC_H);
 	SDL_FreeSurface(PLY_O);
 	SDL_FreeSurface(PLY_X);
-	SDL_FreeSurface(GAMOVR);
+	SDL_FreeSurface(GAMOVR0);
+	SDL_FreeSurface(GAMOVR1);
 }
 
 void renderBoard(){
@@ -147,11 +153,19 @@ void drawSelector(SDL_Rect* position){
     delete selectorPositionAux;
 }
 void drawEndGame(){
+	static bool b = false;
 	cout << "Loading END GAME..." << endl;
 	SDL_Rect* position = new SDL_Rect;
-	position->y = 120;
+	position->y = 102;
+	//position->y = 0;
    	position->x = 0;
-   	SDL_BlitSurface(GAMOVR, NULL, SCREEN_SURFACE, position);
+   	if(b)
+   	{
+   	SDL_BlitSurface(GAMOVR1, NULL, SCREEN_SURFACE, position);
+   	}else{
+   	SDL_BlitSurface(GAMOVR0, NULL, SCREEN_SURFACE, position);
+   }
+   b=!b;
 }
 
 // TODO Refactor this
@@ -159,27 +173,55 @@ void  mainLoop(){
 	
 	Tateti* tateti = new Tateti();
 	SDL_Event event;
-
+	long a = 0;
 	bool quit = false;
 
 	SDL_Rect* selectorPosition = new SDL_Rect;
 	selectorPosition->x = 0;
 	selectorPosition->y = 0;
+	
+	clock_t caquita =  clock();
+	clock_t caquito =  clock();
 
-	bool count = 0;
+
     while( !quit ) {
         //Handle events on queue
 		while( SDL_PollEvent( &event ) != 0 ){
+		
 
 			if(event.type == SDL_QUIT){
 	        	quit = true;
 	        } 
-	    	else if (tateti->gameOver() && !count){
+	    	else if (tateti->gameOver()){
 	    		reloadCell(tateti, selectorPosition);
-	    		drawEndGame();
-	    		count++;
+	    		caquito = clock();
+	    		a = (caquito + caquita)/CLOCKS_PER_SEC ;
+	    		cout << a  <<endl;	
+	    		if(a >= 1) 
+	    		{	
+	    			cout << "IN IF"  <<endl;
+	    			cout << a  <<endl;
+	    			drawEndGame();
+	    			caquita =  clock();
+	    			caquito =  clock();	
+	    		}else
+	    		{cout << "NOT IF"  <<endl;
+	    		}
+
+	    		
+	    			
+
+	    		if ( SDL_PeepEvents(&event, 1, SDL_PEEKEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT) == 0){
+
+	    			
+				SDL_Event sdlevent;
+    			sdlevent.type = SDL_KEYDOWN;
+   				sdlevent.key.keysym.sym = SDLK_1;
+   				SDL_PushEvent(&sdlevent);
+   				}
 	    	}
-			else if(!tateti->gameOver()){
+			else
+			{
 
 	    		reloadCell(tateti, selectorPosition);
 				if(event.type == SDL_KEYDOWN){
