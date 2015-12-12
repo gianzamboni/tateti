@@ -152,20 +152,22 @@ void drawSelector(SDL_Rect* position){
 
     delete selectorPositionAux;
 }
-void drawEndGame(){
+
+Uint32 drawEndGame(Uint32 interval, void *params){
 	static bool b = false;
-	cout << "Loading END GAME..." << endl;
+	cout << "Loading end game..." << endl;
 	SDL_Rect* position = new SDL_Rect;
 	position->y = 102;
-	//position->y = 0;
    	position->x = 0;
-   	if(b)
-   	{
-   	SDL_BlitSurface(GAMOVR1, NULL, SCREEN_SURFACE, position);
+
+   	if(b) {
+   		SDL_BlitSurface(GAMOVR1, NULL, SCREEN_SURFACE, position);
    	}else{
-   	SDL_BlitSurface(GAMOVR0, NULL, SCREEN_SURFACE, position);
+   		SDL_BlitSurface(GAMOVR0, NULL, SCREEN_SURFACE, position);
    }
    b=!b;
+   delete position;
+   return interval;
 }
 
 // TODO Refactor this
@@ -180,9 +182,8 @@ void  mainLoop(){
 	selectorPosition->x = 0;
 	selectorPosition->y = 0;
 	
-	clock_t caquita =  clock();
-	clock_t caquito =  clock();
-
+	bool count = false;
+	SDL_TimerID endGameTimer;
 
     while( !quit ) {
         //Handle events on queue
@@ -192,36 +193,13 @@ void  mainLoop(){
 			if(event.type == SDL_QUIT){
 	        	quit = true;
 	        } 
-	    	else if (tateti->gameOver()){
+	    	else if (tateti->gameOver() && !count){
 	    		reloadCell(tateti, selectorPosition);
-	    		caquito = clock();
-	    		a = (caquito + caquita)/CLOCKS_PER_SEC ;
-	    		cout << a  <<endl;	
-	    		if(a >= 1) 
-	    		{	
-	    			cout << "IN IF"  <<endl;
-	    			cout << a  <<endl;
-	    			drawEndGame();
-	    			caquita =  clock();
-	    			caquito =  clock();	
-	    		}else
-	    		{cout << "NOT IF"  <<endl;
-	    		}
-
-	    		
-	    			
-
-	    		if ( SDL_PeepEvents(&event, 1, SDL_PEEKEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT) == 0){
-
-	    			
-				SDL_Event sdlevent;
-    			sdlevent.type = SDL_KEYDOWN;
-   				sdlevent.key.keysym.sym = SDLK_1;
-   				SDL_PushEvent(&sdlevent);
-   				}
+	    		drawEndGame(1000, NULL);
+	    		endGameTimer = SDL_AddTimer(1000, drawEndGame, NULL);
+	    		count++;
 	    	}
-			else
-			{
+			else if (!tateti->gameOver()){
 
 	    		reloadCell(tateti, selectorPosition);
 				if(event.type == SDL_KEYDOWN){
@@ -243,12 +221,13 @@ void  mainLoop(){
 
 		    }
 
-   			SDL_UpdateWindowSurface(WINDOW);
 
     	}
+   			SDL_UpdateWindowSurface(WINDOW);
 
 	}
 
+	SDL_RemoveTimer(endGameTimer);
     delete selectorPosition;
     delete tateti;
 }

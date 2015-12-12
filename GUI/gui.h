@@ -12,7 +12,7 @@ using namespace std;
 
 	vector<int> boardPosition(SDL_Rect* coords);
 
-	void drawEndGame();
+	Uint32 drawEndGame(Uint32 interval, void *params);
 	void drawSelector(SDL_Rect* position);
 	void freeSurfaces();
 	void initTatetiWindow();
