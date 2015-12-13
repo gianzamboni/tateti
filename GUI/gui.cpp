@@ -195,8 +195,8 @@ void  mainLoop(){
 	        } 
 	    	else if (tateti->gameOver() && !count){
 	    		reloadCell(tateti, selectorPosition);
-	    		drawEndGame(1000, NULL);
-	    		endGameTimer = SDL_AddTimer(1000, drawEndGame, NULL);
+	    		drawEndGame(500, NULL);
+	    		endGameTimer = SDL_AddTimer(230, drawEndGame, NULL);
 	    		count++;
 	    	}
 			else if (!tateti->gameOver()){
